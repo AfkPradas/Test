@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="description" content="None" />
+      <link rel="shortcut icon" href="img/favicon.ico" />
+    <title>Docu PCKT</title>
+    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Configuraci\u00f3 i Verificaci\u00f3 d\u0027una VPN IPsec Site-to-Site amb CLI";
+        var mkdocs_page_input_path = "index.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="." class="icon icon-home"> Docu PCKT
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
+      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">Configuració i Verificació d'una VPN IPsec Site-to-Site amb CLI</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#topologia">Topologia</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#taula-dadreces">Taula d'adreces</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#objectius">Objectius</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#escenari">Escenari</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuracio-de-la-vpn-ipsec">Configuració de la VPN IPsec</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#parametres-de-la-fase-1-isakmp">Paràmetres de la Fase 1 (ISAKMP)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#parametres-de-la-fase-2-ipsec">Paràmetres de la Fase 2 (IPsec)</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#configuracio-a-r1">Configuració a R1</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#configuracio-a-r3">Configuració a R3</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#verificacio-de-la-vpn-ipsec">Verificació de la VPN IPsec</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href=".">Docu PCKT</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Configuració i Verificació d'una VPN IPsec Site-to-Site amb CLI</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/AfkPradas/AfkPradas/edit/master/docs/index.md" class="icon icon-github"> Edit on GitHub</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="configuracio-i-verificacio-duna-vpn-ipsec-site-to-site-amb-cli">Configuració i Verificació d'una VPN IPsec Site-to-Site amb CLI</h1>
+<h2 id="topologia">Topologia</h2>
+<h3 id="taula-dadreces">Taula d'adreces</h3>
+<table>
+<thead>
+<tr>
+<th>Dispositiu</th>
+<th>Interfície</th>
+<th>Adreça IP</th>
+<th>Màscara de subxarxa</th>
+<th>Passarel·la per defecte</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>R1</td>
+<td>G0/0</td>
+<td>192.168.1.1</td>
+<td>255.255.255.0</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>R1</td>
+<td>S0/0/0</td>
+<td>10.1.1.2</td>
+<td>255.255.255.252</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>R2</td>
+<td>G0/0</td>
+<td>192.168.2.1</td>
+<td>255.255.255.0</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>R2</td>
+<td>S0/0/0</td>
+<td>10.1.1.1</td>
+<td>255.255.255.252</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>R2</td>
+<td>S0/0/1</td>
+<td>10.2.2.1</td>
+<td>255.255.255.252</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>R3</td>
+<td>G0/0</td>
+<td>192.168.3.1</td>
+<td>255.255.255.0</td>
+<td>N/A</td>
+</tr>
+<tr>
+<td>R3</td>
+<td>S0/0/1</td>
+<td>10.2.2.2</td>
+<td>255.255.255.252</td>
+<td>N/A</td>
+</tr>
+</tbody>
+</table>
+<h2 id="objectius">Objectius</h2>
+<ul>
+<li>Verificar la connectivitat de la xarxa.</li>
+<li>Configurar R1 i R3 per a suportar una VPN IPsec site-to-site.</li>
+</ul>
+<h2 id="escenari">Escenari</h2>
+<p>Es configura una VPN IPsec entre R1 i R3 a través de R2, que actua com a intermediari sense coneixement del túnel VPN.</p>
+<h2 id="configuracio-de-la-vpn-ipsec">Configuració de la VPN IPsec</h2>
+<h3 id="parametres-de-la-fase-1-isakmp">Paràmetres de la Fase 1 (ISAKMP)</h3>
+<ul>
+<li>Xifratge: AES 256</li>
+<li>Algorisme de hash: SHA-1</li>
+<li>Autenticació: Clau precompartida (<code>vpnpa55</code>)</li>
+<li>Intercanvi de claus: DH Group 5</li>
+<li>Temps de vida SA IKE: 86400 segons</li>
+</ul>
+<h3 id="parametres-de-la-fase-2-ipsec">Paràmetres de la Fase 2 (IPsec)</h3>
+<ul>
+<li>Nom del conjunt de transformació: <code>VPN-SET</code></li>
+<li>Xifratge ESP: <code>esp-aes</code></li>
+<li>Autenticació ESP: <code>esp-sha-hmac</code></li>
+<li>IP del peer: <code>10.2.2.2</code> per R1, <code>10.1.1.2</code> per R3</li>
+<li>Llista d'accés per tràfic xifrat: <code>ACL 110</code></li>
+<li>Mapa criptogràfic: <code>VPN-MAP</code></li>
+</ul>
+<h3 id="configuracio-a-r1">Configuració a R1</h3>
+<ol>
+<li>Verificar connectivitat amb <code>ping</code>.</li>
+<li>Habilitar el paquet Security Technology.</li>
+<li>Definir tràfic interessant amb <code>access-list 110 permit ip 192.168.1.0 0.0.0.255 192.168.3.0 0.0.0.255</code>.</li>
+<li>Configurar ISAKMP:
+   <code>R1(config)# crypto isakmp policy 10
+   R1(config-isakmp)# encryption aes 256
+   R1(config-isakmp)# authentication pre-share
+   R1(config-isakmp)# group 5
+   R1(config)# crypto isakmp key vpnpa55 address 10.2.2.2</code></li>
+<li>Configurar IPsec:
+   <code>R1(config)# crypto ipsec transform-set VPN-SET esp-aes esp-sha-hmac
+   R1(config)# crypto map VPN-MAP 10 ipsec-isakmp
+   R1(config-crypto-map)# set peer 10.2.2.2
+   R1(config-crypto-map)# set transform-set VPN-SET
+   R1(config-crypto-map)# match address 110</code></li>
+<li>Aplicar el mapa criptogràfic a la interfície:
+   <code>R1(config)# interface s0/0/0
+   R1(config-if)# crypto map VPN-MAP</code></li>
+</ol>
+<h3 id="configuracio-a-r3">Configuració a R3</h3>
+<ol>
+<li>Habilitar el paquet Security Technology.</li>
+<li>Definir tràfic interessant:
+   <code>R3(config)# access-list 110 permit ip 192.168.3.0 0.0.0.255 192.168.1.0 0.0.0.255</code></li>
+<li>Configurar ISAKMP:
+   <code>R3(config)# crypto isakmp policy 10
+   R3(config-isakmp)# encryption aes 256
+   R3(config-isakmp)# authentication pre-share
+   R3(config-isakmp)# group 5
+   R3(config)# crypto isakmp key vpnpa55 address 10.1.1.2</code></li>
+<li>Configurar IPsec:
+   <code>R3(config)# crypto ipsec transform-set VPN-SET esp-aes esp-sha-hmac
+   R3(config)# crypto map VPN-MAP 10 ipsec-isakmp
+   R3(config-crypto-map)# set peer 10.1.1.2
+   R3(config-crypto-map)# set transform-set VPN-SET
+   R3(config-crypto-map)# match address 110</code></li>
+<li>Aplicar el mapa criptogràfic a la interfície:
+   <code>R3(config)# interface s0/0/1
+   R3(config-if)# crypto map VPN-MAP</code></li>
+</ol>
+<h2 id="verificacio-de-la-vpn-ipsec">Verificació de la VPN IPsec</h2>
+<ol>
+<li>Abans del tràfic, comprovar estat amb <code>show crypto ipsec sa</code>.</li>
+<li>Generar tràfic interessant fent <code>ping</code> des de PC-A a PC-C.</li>
+<li>Tornar a comprovar estat amb <code>show crypto ipsec sa</code>.</li>
+<li>Generar tràfic no interessant amb <code>ping</code> des de PC-A a PC-B.</li>
+<li>Verificar que el tràfic no interessant no xifra paquets.</li>
+<li>Assegurar-se que el progrés de la configuració és del 100%.</li>
+</ol>
+<p>Aquest document resumeix la configuració d'una VPN IPsec site-to-site entre R1 i R3 mitjançant CLI en Packet Tracer.</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+  </div>
+
+  Built with <a href="https://www.mkdocs.org/">MkDocs</a> using a <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>.
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/AfkPradas/AfkPradas" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = ".";</script>
+    <script src="js/theme_extra.js"></script>
+    <script src="js/theme.js"></script>
+      <script src="search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
+
+<!--
+MkDocs version : 1.6.1
+Build Date UTC : 2025-03-24 07:39:05.140410+00:00
+-->
